@@ -128,40 +128,42 @@ get_k_hat <- function(X, K.max = 8, d_threshold = 1, B = 20) {
   k_hat
 }
 
-results <- lapply(max_radius_values, function(Rmax) {
-  df <- generate_shell_clusters(
-    n_shells    = n_shells,
-    k_per_shell = k_per_shell,
-    max_radius  = Rmax,
-    noise_sd    = noise_sd
-  )
-  X <- df[, c("x1", "x2", "x3")]
-  
-  k_hat <- get_k_hat(X, K.max = 8, d_threshold = d_threshold, B = 20)
-  
-  data.frame(
-    max_radius = Rmax,
-    k_hat      = k_hat
-  )
-})
 
-results_df <- bind_rows(results)
+for (d_threshold in c(0.8, 1.0, 1.2)) { 
+    results <- lapply(max_radius_values, function(Rmax) {
+    df <- generate_shell_clusters(
+        n_shells    = n_shells,
+        k_per_shell = k_per_shell,
+        max_radius  = Rmax,
+        noise_sd    = noise_sd
+    )
+    X <- df[, c("x1", "x2", "x3")]
+    
+    k_hat <- get_k_hat(X, K.max = 8, d_threshold = d_threshold, B = 20)
+    
+    data.frame(
+        max_radius = Rmax,
+        k_hat      = k_hat
+    )
+    })
 
-p1 <- ggplot(results_df, aes(x = max_radius, y = k_hat)) +
-  geom_line(color = "#1c78e9") +
-  geom_point(size = 2, color = "#1c78e9") +
-  geom_hline(yintercept = n_shells, linetype = "dashed") +
-  scale_x_reverse(breaks = max_radius_values) +   # view from large to small radius
-  labs(
-    x = "Maximum radius of outer shell",
-    y = "Estimated number of clusters (k)",
-    title = "Spectral clustering on concentric shells",
-    subtitle = paste("n_shells =", n_shells,
-                     ", k_per_shell =", k_per_shell,
-                     ", d_threshold =", d_threshold)
-  ) +
-  theme_classic(base_size = 14)
-ggsave("figures/spectral_clustering_gap_statistic.png",
-       plot = p1,
-       width = 8, height = 6, dpi = 150)
+    results_df <- bind_rows(results)
 
+    p1 <- ggplot(results_df, aes(x = max_radius, y = k_hat)) +
+    geom_line(color = "#1c78e9") +
+    geom_point(size = 2, color = "#1c78e9") +
+    geom_hline(yintercept = n_shells, linetype = "dashed") +
+    scale_x_reverse(breaks = max_radius_values) +   # view from large to small radius
+    labs(
+        x = "Maximum radius of outer shell",
+        y = "Estimated number of clusters (k)",
+        title = "Spectral clustering on concentric shells",
+        subtitle = paste("n_shells =", n_shells,
+                        ", k_per_shell =", k_per_shell,
+                        ", d_threshold =", d_threshold)
+    ) +
+    theme_classic(base_size = 14)
+    ggsave(paste0("figures/spectral_clustering_gap_statistic_d_threshold_", d_threshold, ".png"),
+        plot = p1,
+        width = 8, height = 6, dpi = 150)
+}

@@ -169,11 +169,10 @@ pre code {
 class="section level1">
 <h1>Task 1 - Clusters and the Gap Statistic</h1>
 <p><img src="figures/gap_estimated_k_vs_side_length.png" /></p>
-<p>In this simulation, the dimensionality (n) determines both the number
-of features and the number of cluster centers, because the cluster
-centers were placed at the positive corners of an n-dimensional
-hypercube. Thus, increasing n increases the number of clusters in the
-dataset.</p>
+<p>The dimensionality (n) determines both the number of features and the
+number of cluster centers, because the cluster centers were placed at
+the positive corners of an n-dimensional hypercube. Thus, increasing n
+increases the number of clusters in the dataset.</p>
 <p>The results show that as n increases from 2 to 6, the Gap Statistic
 becomes less robust, requiring greater separation between cluster
 centers (larger side_length) to correctly recover all n clusters.</p>
@@ -191,7 +190,22 @@ class="section level1">
 <h1>Task 2 - Spectral Clustering on Concentric Shells</h1>
 <iframe src="figures/shell_clusters_3d_plot.html" width="600" height="600" frameborder="0">
 </iframe>
-<p><img src="figures/spectral_clustering_gap_statistic.png" /></p>
+<p><img
+src="figures/spectral_clustering_gap_statistic_d_threshold_1.png" />
+<img
+src="figures/spectral_clustering_gap_statistic_d_threshold_0.8.png" />
+<img
+src="figures/spectral_clustering_gap_statistic_d_threshold_1.2.png" />
+As the outer radius decreases, the shells become closer, and once their
+separation falls below the fixed distance threshold, spectral clustering
+begins to merge shells into the same connected component, causing the
+estimated number of clusters to collapse to 1. Using a smaller threshold
+(0.8) keeps the similarity graph sparser and preserves shell separation
+longer, delaying failure. Using a larger threshold (1.2) over-connects
+the shells and causes spectral clustering to fail much earlier.
+i.e. Smaller thresholds reduce cross-shell connections and make
+clustering easier; larger thresholds blur the shells together and make
+clustering harder.</p>
 </div>
 
 

@@ -35,7 +35,7 @@ dims <- c(6, 5, 4, 3, 2)
 side_lengths <- 10:1
 k <- 100 # points per cluster
 noise_sd <- 1
-
+set.seed(123)
 
 results <- expand.grid(
   dim = dims,
